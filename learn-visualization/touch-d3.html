@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <script src="https://d3js.org/d3.v5.js"></script>
+  </head>
+  <body>
+    <p>Vue</p>
+    <p>React</p>
+    <p>Angular</p>
+    <button id="datum">datum</button>
+    <button id="data">data</button>
+    <script>
+      const body = d3.select("body");
+      const p = body.selectAll("p");
+      function doDatum() {
+        const str = "Framework";
+        p.datum(str);
+        p.text((d, i) => {
+          return `${d}-${i}`;
+        });
+      }
+
+      document.querySelector("#datum").addEventListener("click", () => {
+        doDatum();
+      });
+
+      function doData() {
+        const dataSet = ["Vue", "React", "Angular"];
+        p.data(dataSet).text((d, i) => `${d}-${i}`);
+      }
+
+      document.querySelector("#data").addEventListener("click", () => {
+        doData();
+      });
+    </script>
+  </body>
+</html>
