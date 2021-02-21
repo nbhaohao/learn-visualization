@@ -32,18 +32,44 @@
           data: ["一季度", "二季度", "三季度", "四季度"],
         },
         yAxis: {},
+        legend: {
+          data: [
+            {
+              name: "分类",
+              icon: "circle",
+              textStyle: {
+                color: "red",
+              },
+            },
+            "折线图",
+            "柱状图",
+          ],
+          left: 300,
+        },
+        toolbox: {
+          feature: {
+            dataZoom: {
+              yAxisIndex: false,
+            },
+            restore: {},
+            saveAsImage: {},
+          },
+        },
         series: [
           {
+            name: "分类",
             type: "pie",
             center: ["65%", 60],
             radius: 35,
             encode: { itemName: 3, value: 4 },
           },
           {
+            name: "折线图",
             type: "line",
             encode: { x: 0, y: 1 },
           },
           {
+            name: "柱状图",
             type: "bar",
             encode: { x: 0, y: 2 },
           },
