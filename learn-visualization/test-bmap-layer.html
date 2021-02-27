@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+      /*.anchorBL,*/
+      /*.BMap_cpyCtrl {*/
+      /*  display: none;*/
+      /*}*/
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="./token.js"></script>
+    <script>
+      function init() {
+        const map = new BMapGL.Map("container");
+        const point = new BMapGL.Point(116.404, 39.915);
+        // map.setMapStyleV2({
+        //   styleId: STYLE_ID,
+        // });
+        map.centerAndZoom(point, 20);
+        map.enableScrollWheelZoom(true);
+        // map.setHeading(64.5);
+        // map.setTilt(73);
+        // map.setMapType(BMAP_EARTH_MAP);
+        map.setMapType(BMAP_NORMAL_MAP);
+        const zoomCtrl = new BMapGL.ZoomControl({
+          anchor: BMAP_ANCHOR_TOP_LEFT,
+        });
+        map.addControl(zoomCtrl);
+        const scaleCtrl = new BMapGL.ScaleControl({
+          anchor: BMAP_ANCHOR_TOP_LEFT,
+        });
+        map.addControl(scaleCtrl);
+        const myIcon = new BMapGL.Icon(
+          "https://pic2.zhimg.com/v2-a1e0b61107445119c3dc4d095e34cdd5_is.jpg",
+          new BMapGL.Size(60, 60),
+          {}
+        );
+        const marker = new BMapGL.Marker(point, { icon: myIcon });
+        // map.addOverlay(marker);
+        const polyLine = new BMapGL.Polyline(
+          [
+            new BMapGL.Point(116.399, 39.91),
+            new BMapGL.Point(116.405, 39.92),
+            new BMapGL.Point(116.425, 39.9),
+          ],
+          { strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5 }
+        );
+        map.addOverlay(polyLine);
+      }
+      window.addEventListener("load", () => {
+        const script = document.createElement("script");
+        script.src = `https://api.map.baidu.com/api?v=1.0&type=webgl&ak=${MAP_TOKEN}&callback=init`;
+        document.body.appendChild(script);
+      });
+    </script>
+  </body>
+</html>
