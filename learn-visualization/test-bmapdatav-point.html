@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      #map_container {
+        width: 100%;
+        height: 100%;
+      }
+      /*.anchorBL,*/
+      /*.BMap_cpyCtrl {*/
+      /*  display: none;*/
+      /*}*/
+    </style>
+  </head>
+  <body>
+    <div id="map_container"></div>
+    <script
+      type="text/javascript"
+      src="https://api.map.baidu.com/library/TrackAnimation/src/TrackAnimation_min.js"
+    ></script>
+    <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+    <script src="https://mapv.baidu.com/build/mapv.js"></script>
+    <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
+    <script src="./token.js"></script>
+    <script>
+      function initData() {
+        let data = [];
+        let random = 700;
+        const cities = [
+          "北京",
+          "天津",
+          "上海",
+          "重庆",
+          "石家庄",
+          "太原",
+          "呼和浩特",
+          "哈尔滨",
+          "长春",
+          "沈阳",
+          "济南",
+          "南京",
+          "合肥",
+          "杭州",
+          "南昌",
+          "福州",
+          "郑州",
+          "武汉",
+          "长沙",
+          "广州",
+          "南宁",
+          "西安",
+          "银川",
+          "兰州",
+          "西宁",
+          "乌鲁木齐",
+          "成都",
+          "贵阳",
+          "昆明",
+          "拉萨",
+          "海口",
+        ];
+        while (random--) {
+          const cityCenter = mapv.utilCityCenter.getCenterByCityName(
+            cities[parseInt(Math.random() * cities.length)]
+          );
+          data.push({
+            geometry: {
+              type: "Point",
+              coordinates: [
+                cityCenter.lng - 2 + Math.random() * 4,
+                cityCenter.lat - 2 + Math.random() * 4,
+              ],
+            },
+            properties: {
+              sales: Math.random() * 100,
+            },
+          });
+        }
+        // data = data.filter((item) => item.properties.sales > 50);
+        return data;
+      }
+      function initBMap() {
+        const cityCenter = mapv.utilCityCenter.getCenterByCityName("南京");
+        const map = initMap({
+          tilt: 0,
+          center: [cityCenter.lng, cityCenter.lat],
+          zoom: 10,
+          style: snowStyle,
+        });
+        return map;
+      }
+
+      function setData(data, map) {
+        // 绘制数据源
+        const view = new mapvgl.View({ map });
+        const intensity = new mapvgl.Intensity({
+          min: 0,
+          max: 100,
+          minSize: 5,
+          maxSize: 30,
+          gradient: {
+            0: "rgba(25,66,102,0.8)",
+            0.3: "rgba(145,102,129,0.8)",
+            0.7: "rgba(210,131,137,0.8)",
+            1: "rgba(248,177,149,0.8)",
+          },
+        });
+        const pointLayer = new mapvgl.PointLayer({
+          size: (data) => {
+            return intensity.getSize(data.properties.sales);
+          },
+          color: (data) => {
+            return intensity.getColor(data.properties.sales);
+          },
+        });
+        view.addLayer(pointLayer);
+        pointLayer.setData(data, map);
+      }
+      function init() {
+        const map = initBMap();
+        const data = initData();
+        setData(data, map);
+      }
+      window.addEventListener("load", () => {
+        const script = document.createElement("script");
+        script.src = `https://api.map.baidu.com/api?v=1.0&type=webgl&ak=${MAP_TOKEN}&callback=init`;
+        document.body.appendChild(script);
+      });
+    </script>
+  </body>
+</html>
